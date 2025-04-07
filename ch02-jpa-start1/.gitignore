@@ -40,3 +40,11 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# IntelliJ 설정 폴더
+.idea/
+
+# gradle wrapper 관련
+gradle/
+gradlew
+gradlew.bat
