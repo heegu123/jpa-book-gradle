@@ -5,14 +5,17 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "MEMBER")
+@Table(name = "MEMBER", uniqueConstraints = {@UniqueConstraint(
+        name = "NAME_AGE_UNIQUE",
+        columnNames = {"NAME", "AGE"} )})
 public class Member {
 
     @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private String id;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", nullable = false, length = 10)
     private String username;
 
     private Integer age;
@@ -28,8 +31,7 @@ public class Member {
     private Date lastModifiedDate;
 
     @Lob
-    // 이 컬럼은 MySQL에서 CLOB 타입(TEXT)으로 매칭됩니다.
-    @Column(columnDefinition = "TEXT")
+    // String으로 선언하면 MySQL의 tinytext로 매칭
     private String description;
 
     public String getId() {
