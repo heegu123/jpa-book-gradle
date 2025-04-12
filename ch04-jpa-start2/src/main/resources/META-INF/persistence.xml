@@ -17,6 +17,9 @@
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.use_sql_comments" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="create" />
-        </properties>
+
+<!--        책의 이름 매핑 전략 ImprovedNamingStrategy는 더이상 지원하지 않음-->
+<!--        Hibernate의 CamelCaseToUnderscoresNamingStrategy 사용-->
+            <property name="hibernate.physical_naming_strategy" value="org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy"/>        </properties>
     </persistence-unit>
 </persistence>

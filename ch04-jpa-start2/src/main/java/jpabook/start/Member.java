@@ -28,6 +28,8 @@ public class Member {
     private Date lastModifiedDate;
 
     @Lob
+    // 이 컬럼은 MySQL에서 CLOB 타입(TEXT)으로 매칭됩니다.
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     public String getId() {
