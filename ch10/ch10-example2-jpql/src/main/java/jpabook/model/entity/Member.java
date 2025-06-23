@@ -70,6 +70,7 @@ public class Member {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
+                ", team=" + team +
                 '}';
     }
 }
