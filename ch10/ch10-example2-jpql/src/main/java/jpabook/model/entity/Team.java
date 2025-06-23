@@ -47,7 +47,7 @@ public class Team {
 
     @Override
     public String toString() {
-        return "JpqlTeam{" +
+        return "Team{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

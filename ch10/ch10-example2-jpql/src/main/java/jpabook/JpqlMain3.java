@@ -3,8 +3,6 @@ package jpabook;
 import jakarta.persistence.*;
 import jpabook.model.entity.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class JpqlMain3 {
@@ -24,6 +22,15 @@ public class JpqlMain3 {
             // 예제 10.25 - Outer Join
             outerJoin();
 
+            // 예제 - Collection Join
+            collectionJoin();
+
+            // 예제 10.26 - Theta Join(Cross Join, Cartesian Product)
+            thetaJoin();
+
+            // 예제 10.27 - JOIN ON 절
+            joinOn();
+
         } catch (Exception e) {
             e.printStackTrace();
             tx.rollback();
@@ -33,6 +40,7 @@ public class JpqlMain3 {
         emf.close();
     }
 
+    // 데이터 준비
     public static void init() {
 
         Team team1 = new Team();
@@ -42,6 +50,10 @@ public class JpqlMain3 {
         Team team2 = new Team();
         team2.setName("팀B");
         em.persist(team2);
+
+        Team team3 = new Team();
+        team3.setName("팀C");
+        em.persist(team3);
 
         Member member1 = new Member();
         member1.setAge(10);
@@ -115,7 +127,7 @@ public class JpqlMain3 {
 
     // 예제 10.25 - Outer Join
     public static void outerJoin() {
-        String query = "SELECT m " +
+        String query = "SELECT m, t " +
                 "FROM Member m LEFT JOIN m.team t";
 
         List<Object[]> resultList = em.createQuery(query).getResultList();
@@ -124,7 +136,50 @@ public class JpqlMain3 {
         System.out.println("\n***** Ex10.25 외부 조인 사용 예 *****\n");
         for (Object[] objects : resultList) {
             Member m = (Member) objects[0];
-            System.out.println("member = " + m);
+            Team t = (Team) objects[1];
+            System.out.println("member, team = " + m + ", " + t);
+        }
+    }
+
+    // 예제 Collection Join
+    public static void collectionJoin() {
+        String query = "SELECT t, m FROM Team t LEFT JOIN t.members m";
+        List<Object[]> resultList = em.createQuery(query).getResultList();
+
+        System.out.println("\n***** Ex10.26 컬렉션 조인 사용 예 *****\n");
+        for (Object[] objects : resultList) {
+            Team t = (Team) objects[0];
+            Member m = (Member) objects[1];
+
+            System.out.println("Team, Member = " + t + ", " + m);
+        }
+    }
+
+    // 예제 10.26 - Theta Join(Cross Join, Cartesian Product)
+    public static void thetaJoin() {
+        String query = "SELECT COUNT(m) " +
+                "FROM Member m, Team t ";
+
+        System.out.println("\n***** Ex10.27 세타 조인 사용 예 *****\n");
+        Long singleResult = em.createQuery(query, Long.class).getSingleResult();
+
+        System.out.println("singleResult = " + singleResult);
+    }
+
+    // 예제 10.27 - JOIN ON 절
+    public static void joinOn() {
+
+        String teamName = "팀A";
+        Query query = em.createQuery("SELECT m, t FROM Member m LEFT JOIN m.team t ON t.name = :teamName");
+        query.setParameter("teamName", teamName);
+        List<Object[]> resultList = query.getResultList();
+
+        System.out.println("\n***** Ex10.27 JOIN ON절 사용 예 *****\n");
+        for (Object[] objects : resultList) {
+            Member member = (Member) objects[0];
+            Team team = (Team) objects[1];
+
+            System.out.println("Member, Team = " + member + ", " + team);
         }
     }
 }
