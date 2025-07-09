@@ -31,6 +31,17 @@ public class JpqlMain3 {
             // 예제 10.27 - JOIN ON 절
             joinOn();
 
+            // 예제 10.28 - 페치 조인
+            fetchJoin();
+
+            // 예제 10.29 - 컬렉션 페치 조인
+            collectionFetchJoin();
+
+            // 예제 10.31 - 컬렉션 페치 조인2
+            collectionFetchJoin2();
+
+            collectionFetchJoin3();
+
         } catch (Exception e) {
             e.printStackTrace();
             tx.rollback();
@@ -180,6 +191,63 @@ public class JpqlMain3 {
             Team team = (Team) objects[1];
 
             System.out.println("Member, Team = " + member + ", " + team);
+        }
+    }
+
+    // 예제 10.28 - 페치 조인 사용
+    public static void fetchJoin() {
+        String jpql = "select m from Member m join fetch m.team";
+
+        List<Member> members = em.createQuery(jpql, Member.class)
+                .getResultList();
+
+        System.out.println("\n***** Ex10.28 페치 조인 *****\n");
+        for (Member member : members) {
+            System.out.println("username = " + member.getName() + ", " +
+                    "teamName = " + member.getTeam().getName());
+        }
+    }
+
+    // 예제 10.29 - 컬렉션 페치 조인 사용
+    public static void collectionFetchJoin() {
+        String jpql = "select t from Team t join fetch t.members where t.name= '팀A'";
+
+        List<Team> teams = em.createQuery(jpql, Team.class)
+                .getResultList();
+
+        System.out.println("\n***** Ex10.29 컬렉션 페치 조인 *****\n");
+        for (Team team : teams) {
+            System.out.println("teamName = " + team.getName() + ", " + "members" +
+                    team.getMembers());
+        }
+    }
+
+    // 예제 10.31 - 컬렉션 페치 조인 사용
+    public static void collectionFetchJoin2() {
+        String jpql = "select t from Team t join fetch t.members where t.name= '팀A'";
+
+        List<Team> teams = em.createQuery(jpql, Team.class).getResultList();
+
+        System.out.println("\n***** Ex10.31 컬렉션 페치 조인2 *****\n");
+        for (Team team : teams) {
+            System.out.println("teamname = " + team.getName() + ", team = " + team);
+
+            for (Member member : team.getMembers()) {
+                System.out.println("membername = " + member.getName() +
+                        ", member = " + member);
+            }
+        }
+    }
+
+    // 예제 10.33 - 컬렉션 페치 없이 내부조인만
+    public static void collectionFetchJoin3() {
+        String jpql = "select t from Team t join t.members where t.name= '팀A'";
+
+        List<Team> teams = em.createQuery(jpql, Team.class).getResultList();
+
+        System.out.println("\n***** Ex10.33 컬렉션 페치 조인3 *****\n");
+        for (Team team : teams) {
+            System.out.println("teamname = " + team.getName() + ", team = " + team);
         }
     }
 }
