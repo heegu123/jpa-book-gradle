@@ -239,15 +239,21 @@ public class JpqlMain3 {
         }
     }
 
-    // 예제 10.33 - 컬렉션 페치 없이 내부조인만
+    // 예제 10.33 - 컬렉션 페치 없이 내부조인만 - hibernate 6.x 버전 부터는 distinct 없이도 중복 제거(SQL 결과는 중복)
     public static void collectionFetchJoin3() {
-        String jpql = "select t from Team t join t.members where t.name= '팀A'";
-
+        String jpql = "select t from Team t join fetch t.members where t.name='팀A'";
         List<Team> teams = em.createQuery(jpql, Team.class).getResultList();
 
-        System.out.println("\n***** Ex10.33 컬렉션 페치 조인3 *****\n");
         for (Team team : teams) {
-            System.out.println("teamname = " + team.getName() + ", team = " + team);
+
+            System.out.println("teamname = " + team.getName() + ", team = " +
+                    team);
+
+            for (Member member : team.getMembers()) {
+                System.out.println(
+                        "->username = " + member.getName() + ", member = " + member);
+            }
+
         }
     }
 }
